@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flying Alphabets</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        background-color: #1a1a1a;
+        font-family: Arial, sans-serif;
+      }
+
+      .alphabet {
+        position: absolute;
+        font-size: 10rem;
+        font-weight: bold;
+        color: white;
+        pointer-events: none;
+        transition: transform 0.2s ease;
+      }
+      .navbar {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .navbar img {
+        max-height: 50px;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <img class="image" src="/puzzle.png" alt="puzzle logo" />
+    </div>
+
+    <script>
+      console.log(
+        "%c" + "Glad you are here! but nothing is here 🤷‍♂️!",
+        "color: #7289DA; -webkit-text-stroke: 2px black; font-size: 40px; font-weight: bold;"
+      );
+
+      const alphabetArray = "ABDFGHJKLMOQRUVWXYZ".split("");
+      const alphabets = [];
+      const NUM_ALPHABETS = 19;
+
+      alphabetArray.forEach((letter) => {
+        const span = document.createElement("span");
+        span.className = "alphabet";
+        span.textContent = letter;
+        span.style.left = `${Math.random() * (window.innerWidth - 100)}px`;
+        span.style.top = `${Math.random() * (window.innerHeight - 150)}px`;
+        document.body.appendChild(span);
+        console.error(
+          "Uncaught TypeError: Cannot read properties of undefined (reading 'base64')"
+        );
+        alphabets.push({
+          element: span,
+          velocityX: (Math.random() - 0.5) * 2,
+          velocityY: (Math.random() - 0.5) * 2,
+        });
+      });
+
+      function animate() {
+        alphabets.forEach((alphabetObj) => {
+          const { element, velocityX, velocityY } = alphabetObj;
+
+          let currentX = parseFloat(element.style.left);
+          let currentY = parseFloat(element.style.top);
+
+          let newX = currentX + velocityX;
+          let newY = currentY + velocityY;
+
+          if (newX < 0 || newX > window.innerWidth - 100) {
+            alphabetObj.velocityX *= -1;
+            newX = Math.max(0, Math.min(newX, window.innerWidth - 100));
+          }
+
+          if (newY < 0 || newY > window.innerHeight - 150) {
+            alphabetObj.velocityY *= -1;
+            newY = Math.max(0, Math.min(newY, window.innerHeight - 150));
+          }
+
+          element.style.left = `${newX}px`;
+          element.style.top = `${newY}px`;
+        }); //aHR0cHM6Ly9zdHlsZXN1eHguZ2l0aHViLmlvL3N0ZWdhbm9ncmFwaHkv
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+
+      document.addEventListener("mousemove", (event) => {
+        alphabets.forEach((alphabetObj) => {
+          const { element } = alphabetObj;
+          const rect = element.getBoundingClientRect();
+          const dx = rect.left + rect.width / 2 - event.clientX;
+          const dy = rect.top + rect.height / 2 - event.clientY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 100) {
+            alphabetObj.velocityX += 0.4;
+            alphabetObj.velocityY += 0.4;
+          }
+        });
+      });
+
+      window.addEventListener("resize", () => {
+        alphabets.forEach((alphabetObj) => {
+          const { element } = alphabetObj;
+          element.style.left = `${Math.random() * window.innerWidth - 100}px`;
+          element.style.top = `${Math.random() * window.innerHeight - 150}px`;
+        });
+      });
+    </script>
+  </body>
+</html>
